@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.erp.dao.UnqualifyApplyMapper">
+  <resultMap id="BaseResultMap" type="com.erp.bean.UnqualifyApply">
+    <id column="unqualify_apply_id" jdbcType="VARCHAR" property="unqualifyApplyId" />
+    <result column="product_id" jdbcType="VARCHAR" property="productId" />
+    <result column="unqualify_item" jdbcType="VARCHAR" property="unqualifyItem" />
+    <result column="unqualify_count" jdbcType="INTEGER" property="unqualifyCount" />
+    <result column="assembly_date" jdbcType="TIMESTAMP" property="assemblyDate" />
+    <result column="emp_id" jdbcType="VARCHAR" property="empId" />
+    <result column="apply_date" jdbcType="TIMESTAMP" property="applyDate" />
+    <result column="note" jdbcType="VARCHAR" property="note" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    unqualify_apply_id, product_id, unqualify_item, unqualify_count, assembly_date, emp_id, 
+    apply_date, note
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from unqualify_apply
+    where unqualify_apply_id = #{unqualifyApplyId,jdbcType=VARCHAR}
+  </select>
+
+
+  <select id="selectPartUnqualifyApplys" parameterType="hashmap" resultMap="BaseResultMap">
+    SELECT * FROM unqualify_apply
+    limit #{limit} offset #{offset}
+
+  </select>
+
+
+  <select id="selectCountUnqualifyApplys" resultType="java.lang.Integer">
+    SELECT COUNT(*) FROM  unqualify_apply
+  </select>
+
+
+
+  <select id="search_unqualify_by_unqualifyId" parameterType="hashmap" resultMap="BaseResultMap">
+    SELECT * FROM unqualify_apply
+    <where>
+        <if test="searchValue!=null and !searchValue.isEmpty()">
+            AND unqualify_apply_id LIKE #{searchValue}
+        </if>
+    </where>
+    limit #{limit} offset #{offset}
+  </select>
+
+
+
+
+    <select id="selectCountUnqualifyApplysByCondition" parameterType="UnqualifyApply" resultType="java.lang.Integer">
+      SELECT COUNT(*) FROM unqualify_apply
+      <where>
+        <if test="unqualifyApplyId!=null and !unqualifyApplyId.isEmpty()">
+          AND unqualify_apply_id LIKE #{unqualifyApplyId}
+        </if>
+        <if test="productId!=null and !productId.isEmpty()">
+          AND product_id LIKE #{productId}
+        </if>
+      </where>
+    </select>
+
+
+  <select id="selectUnqualifyApplysByCondition" parameterType="hashmap" resultMap="BaseResultMap">
+
+    SELECT * FROM unqualify_apply
+    <where>
+      <if test="unqualifyApply.unqualifyApplyId!=null and !unqualifyApply.unqualifyApplyId.isEmpty()">
+        AND unqualify_apply_id LIKE #{unqualifyApply.unqualifyApplyId}
+      </if>
+      <if test="unqualifyApply.productId!=null and !unqualifyApply.productId.isEmpty()">
+        AND product_id LIKE #{unqualifyApply.productId}
+      </if>
+    </where>
+       limit #{limit} offset #{offset}
+  </select>
+
+  <select id="selectCountUnqualifyApplysByName" parameterType="UnqualifyApply" resultType="java.lang.Integer">
+    SELECT COUNT(*) FROM unqualify_apply u LEFT OUTER JOIN product p ON u.product_id=p.product_id
+    <where>
+      <if test="productName!=null and !productName.isEmpty()">
+        AND product_name LIKE #{productName}
+      </if>
+    </where>
+  </select>
+
+  <select id="search_unqualify_by_productName" parameterType="hashmap" resultMap="BaseResultMap">
+    SELECT * FROM unqualify_apply u LEFT OUTER JOIN product p ON u.product_id=p.product_id
+    <where>
+      <if test="unqualifyApply.productName!=null and !unqualifyApply.productName.isEmpty()">
+        AND product_name LIKE #{unqualifyApply.productName}
+      </if>
+    </where>
+    limit #{limit} offset #{offset}
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from unqualify_apply
+    where unqualify_apply_id = #{unqualifyApplyId,jdbcType=VARCHAR}
+  </delete>
+
+  <insert id="insert" parameterType="com.erp.bean.UnqualifyApply">
+    insert into unqualify_apply (unqualify_apply_id, product_id, unqualify_item, 
+      unqualify_count, assembly_date, emp_id, 
+      apply_date, note)
+    values (#{unqualifyApplyId,jdbcType=VARCHAR}, #{productId,jdbcType=VARCHAR}, #{unqualifyItem,jdbcType=VARCHAR}, 
+      #{unqualifyCount,jdbcType=INTEGER}, #{assemblyDate,jdbcType=TIMESTAMP}, #{empId,jdbcType=VARCHAR}, 
+      #{applyDate,jdbcType=TIMESTAMP}, #{note,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.erp.bean.UnqualifyApply">
+    insert into unqualify_apply
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="unqualifyApplyId != null">
+        unqualify_apply_id,
+      </if>
+      <if test="productId != null">
+        product_id,
+      </if>
+      <if test="unqualifyItem != null">
+        unqualify_item,
+      </if>
+      <if test="unqualifyCount != null">
+        unqualify_count,
+      </if>
+      <if test="assemblyDate != null">
+        assembly_date,
+      </if>
+      <if test="empId != null">
+        emp_id,
+      </if>
+      <if test="applyDate != null">
+        apply_date,
+      </if>
+      <if test="note != null">
+        note,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="unqualifyApplyId != null">
+        #{unqualifyApplyId,jdbcType=VARCHAR},
+      </if>
+      <if test="productId != null">
+        #{productId,jdbcType=VARCHAR},
+      </if>
+      <if test="unqualifyItem != null">
+        #{unqualifyItem,jdbcType=VARCHAR},
+      </if>
+      <if test="unqualifyCount != null">
+        #{unqualifyCount,jdbcType=INTEGER},
+      </if>
+      <if test="assemblyDate != null">
+        #{assemblyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="empId != null">
+        #{empId,jdbcType=VARCHAR},
+      </if>
+      <if test="applyDate != null">
+        #{applyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="note != null">
+        #{note,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.erp.bean.UnqualifyApply">
+    update unqualify_apply
+    <set>
+      <if test="productId != null">
+        product_id = #{productId,jdbcType=VARCHAR},
+      </if>
+      <if test="unqualifyItem != null">
+        unqualify_item = #{unqualifyItem,jdbcType=VARCHAR},
+      </if>
+      <if test="unqualifyCount != null">
+        unqualify_count = #{unqualifyCount,jdbcType=INTEGER},
+      </if>
+      <if test="assemblyDate != null">
+        assembly_date = #{assemblyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="empId != null">
+        emp_id = #{empId,jdbcType=VARCHAR},
+      </if>
+      <if test="applyDate != null">
+        apply_date = #{applyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="note != null">
+        note = #{note,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where unqualify_apply_id = #{unqualifyApplyId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.erp.bean.UnqualifyApply">
+    update unqualify_apply
+    set product_id = #{productId,jdbcType=VARCHAR},
+      unqualify_item = #{unqualifyItem,jdbcType=VARCHAR},
+      unqualify_count = #{unqualifyCount,jdbcType=INTEGER},
+      assembly_date = #{assemblyDate,jdbcType=TIMESTAMP},
+      emp_id = #{empId,jdbcType=VARCHAR},
+      apply_date = #{applyDate,jdbcType=TIMESTAMP},
+      note = #{note,jdbcType=VARCHAR}
+    where unqualify_apply_id = #{unqualifyApplyId,jdbcType=VARCHAR}
+  </update>
+</mapper>

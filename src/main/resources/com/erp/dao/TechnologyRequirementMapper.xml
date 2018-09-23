@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.erp.dao.TechnologyRequirementMapper">
+  <resultMap id="BaseResultMap" type="com.erp.bean.TechnologyRequirement">
+    <id column="technology_requirement_id" jdbcType="VARCHAR" property="technologyRequirementId"/>
+    <result column="technology_id" jdbcType="VARCHAR" property="technologyId"/>
+    <result column="requirement" jdbcType="VARCHAR" property="requirement"/>
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime"/>
+    <result column="revise_time" jdbcType="TIMESTAMP" property="reviseTime"/>
+  </resultMap>
+  <resultMap id="AddResultMap" type="com.erp.bean.device.TechnologyRequirementVo" extends="BaseResultMap">
+    <result column="technology_name" jdbcType="VARCHAR" property="technologyName"/>
+  </resultMap>
+  <resultMap id="selResultMap" type="com.erp.bean.Technology" extends="BaseResultMap">
+    <result column="technology_name" jdbcType="VARCHAR" property="technologyName"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    technology_requirement_id, technology_id, requirement, add_time, revise_time
+  </sql>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from technology_requirement
+    where technology_requirement_id = #{technologyRequirementId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.erp.bean.TechnologyRequirement">
+    insert into technology_requirement (technology_requirement_id, technology_id, 
+      requirement, add_time, revise_time
+      )
+    values (#{technologyRequirementId,jdbcType=VARCHAR}, #{technologyId,jdbcType=VARCHAR}, 
+      #{requirement,jdbcType=VARCHAR}, #{addTime,jdbcType=VARCHAR}, #{reviseTime,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.erp.bean.TechnologyRequirement">
+    insert into technology_requirement
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="technologyRequirementId != null">
+        technology_requirement_id,
+      </if>
+      <if test="technologyId != null">
+        technology_id,
+      </if>
+      <if test="requirement != null">
+        requirement,
+      </if>
+      <if test="addTime != null">
+        add_time,
+      </if>
+      <if test="reviseTime != null">
+        revise_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="technologyRequirementId != null">
+        #{technologyRequirementId,jdbcType=VARCHAR},
+      </if>
+      <if test="technologyId != null">
+        #{technologyId,jdbcType=VARCHAR},
+      </if>
+      <if test="requirement != null">
+        #{requirement,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null">
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="reviseTime != null">
+        #{reviseTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.erp.bean.TechnologyRequirement">
+    update technology_requirement
+    <set>
+      <if test="technologyId != null">
+        technology_id = #{technologyId,jdbcType=VARCHAR},
+      </if>
+      <if test="requirement != null">
+        requirement = #{requirement,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null">
+        add_time = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="reviseTime != null">
+        revise_time = #{reviseTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where technology_requirement_id = #{technologyRequirementId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.erp.bean.TechnologyRequirement">
+    update technology_requirement
+    set technology_id = #{technologyId,jdbcType=VARCHAR},
+      requirement = #{requirement,jdbcType=VARCHAR},
+      add_time = #{addTime,jdbcType=TIMESTAMP},
+      revise_time = #{reviseTime,jdbcType=TIMESTAMP}
+    where technology_requirement_id = #{technologyRequirementId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectAll" resultMap="AddResultMap">
+    SELECT * FROM technology_requirement r LEFT JOIN technology t ON r.technology_id =t.technology_id
+  </select>
+  <select id="selectByRequirement" parameterType="technologyRequirement" resultMap="AddResultMap">
+    SELECT * FROM technology_requirement r LEFT JOIN technology t ON r.technology_id =t.technology_id
+    <where>
+      <if test="_parameter!=null">
+        technology_requirement_id=#{technologyRequirementId,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </select>
+  <select id="selectById" resultMap="BaseResultMap">
+    <if test="_parameter!=null">
+      SELECT * FROM technology_requirement where technology_requirement_id=#{technologyRequirementId,jdbcType=VARCHAR}
+    </if>
+  </select>
+  <select id="selectTechnology" resultMap="selResultMap">
+    select * from technology
+    <where>
+      <if test="_parameter!=null">
+        technology_name=#{technologyName,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </select>
+  <select id="selectByName" parameterType="technology" resultMap="AddResultMap">
+    SELECT * FROM technology_requirement r LEFT JOIN technology t ON r.technology_id =t.technology_id
+    <where>
+      <if test="technologyId!=null">
+        r.technology_id=#{technologyId,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </select>
+</mapper>
